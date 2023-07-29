@@ -54,12 +54,9 @@ passport.use(
       try {
         let data = await GithubModel.findOne({ "profile.id": profile.id });
         if (data == null) {
-          // Create a new instance of GithubModel with the entire profile object
           let newGithubUser = new GithubModel({
             profile: profile,
           });
-
-          // Save the new instance to the database
           await newGithubUser.save();
           done(null, profile);
         } else {
@@ -68,7 +65,7 @@ passport.use(
           done(null, profile);
         }
       } catch (error) {
-        done(error, false); // Pass the error to done() as the first argument
+        done(error, false); 
       }
     }
   )

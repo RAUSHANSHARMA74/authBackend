@@ -6,10 +6,9 @@ const TwitterStrategy = require("passport-twitter").Strategy;
 const twitterAuthRouter = express.Router();
 require("dotenv").config();
 
-// Add express-session middleware with desired configurations
 twitterAuthRouter.use(
   session({
-    secret: "your_secret_key", // Replace 'your_secret_key' with a strong random string
+    secret: "your_secret_key", 
     resave: false,
     saveUninitialized: false,
   })
