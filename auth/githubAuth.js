@@ -1,7 +1,6 @@
 const express = require("express");
 const passport = require("passport");
 const session = require("express-session");
-const path = require("path");
 const { GithubModel } = require("../model/githubModel");
 const {sendMail} = require("../mailSender/mail")
 const GitHubStrategy = require("passport-github2").Strategy;
@@ -43,18 +42,6 @@ githubAuthRouter.get("/github/users", async (req, res) => {
   }
 });
 
-
-githubAuthRouter.use(express.static(path.join(__dirname, "https://funapplication.netlify.app")));
-githubAuthRouter.get("/github/success", async (req, res) => {
-  try {
-    const filePath = path.join(__dirname, "https://funapplication.netlify.app/html/final.html");
-    res.sendFile(filePath);
-    // res.send("hello Github!")
-  } catch (error) {
-    console.log("error in /github/success", error);
-    res.status(500).send("Internal Server Error");
-  }
-});
 
 
 passport.use(
@@ -99,7 +86,7 @@ githubAuthRouter.get(
   (req, res) => {
     if (req.isAuthenticated()) {
       sendMail(userEmail, userName)
-      res.redirect("/github/success");
+      res.redirect("https://funapplication.netlify.app/html/final.html");
     } else {
       res.redirect("/auth/fail");
     }

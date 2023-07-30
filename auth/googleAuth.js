@@ -51,19 +51,6 @@ googleAuthRouter.get("/auth/fail", async (req, res) => {
 });
 
 
-// googleAuthRouter.use(express.static(path.join(__dirname, "https://funapplication.netlify.app")));
-// googleAuthRouter.get("/auth/success", async (req, res) => {
-//   try {
-//     // const filePath = path.join(__dirname, "https://funapplication.netlify.app/html/final.html");
-//     // res.sendFile(filePath);
-//     // res.send("hello Google!")
-//     re
-//   } catch (error) {
-//     console.log("error in /auth/success", error);
-//     res.status(500).send("Internal Server Error");
-//   }
-// });
-
 passport.use(
   new GoogleStrategy(
     {
@@ -106,7 +93,7 @@ googleAuthRouter.get(
   (req, res) => {
     console.log(req.user, req.isAuthenticated());
     sendMail(userEmail, userName);
-    res.redirect("https://funapplication.netlify.app");
+    res.redirect("https://funapplication.netlify.app/html/final.html");
   }
 );
 
