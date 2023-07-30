@@ -49,7 +49,7 @@ twitterAuthRouter.get("/twitter/success", async (req, res) => {
 passport.use(new TwitterStrategy({
     consumerKey: process.env.twitter_key,
     consumerSecret: process.env.twitter_secret,
-    callbackURL: "/auth/twitter/callback"
+    callbackURL: "https://authbackend-rbqn.onrender.com/auth/twitter/callback"
   },
   async function (accessToken, refreshToken, profile, done) {
     try {

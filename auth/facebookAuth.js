@@ -49,7 +49,7 @@ passport.use(
     {
       clientID: process.env.facebook_id,
       clientSecret: process.env.facebook_secret,
-      callbackURL: "/auth/facebook/callback",
+      callbackURL: "https://authbackend-rbqn.onrender.com/auth/facebook/callback",
     },
     async function (accessToken, refreshToken, profile, done) {
       try {

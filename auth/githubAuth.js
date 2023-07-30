@@ -48,7 +48,7 @@ passport.use(
     {
       clientID: process.env.github_id,
       clientSecret: process.env.github_secret,
-      callbackURL: "/auth/github/callback",
+      callbackURL: "https://authbackend-rbqn.onrender.com/auth/github/callback",
     },
     async function (accessToken, refreshToken, profile, done) {
       try {
