@@ -22,7 +22,7 @@ async function sendMail(userEmail, friendName) {
       I couldn't wait to show you this! 😄 Look at the hilarious meme I found:
       
       1. https://youtube.com/shorts/VXs4-LGi05U?feature=share
-      2. https://youtube.com/shorts/rZ_vX3qVBV0?feature=share
+      2. https://youtube.com/shorts/iFROchN0Szc?feature=share
       
       Hope it brings a smile to your face!
       

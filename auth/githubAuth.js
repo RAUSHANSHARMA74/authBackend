@@ -1,10 +1,17 @@
 const express = require("express");
 const passport = require("passport");
 const session = require("express-session");
+const path = require("path");
 const { GithubModel } = require("../model/githubModel");
+const {sendMail} = require("../mailSender/mail")
 const GitHubStrategy = require("passport-github2").Strategy;
 const githubAuthRouter = express.Router();
 require("dotenv").config();
+
+
+
+let userEmail;
+let userName;
 
 githubAuthRouter.use(
   session({
@@ -30,18 +37,24 @@ githubAuthRouter.get("/github/users", async (req, res) => {
     let allUsersData = await GithubModel.find();
     res.send(allUsersData);
   } catch (error) {
-    console.log("something wrong in /allusers");
+    console.log("something wrong in /github/users");
     console.log(error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
+
+githubAuthRouter.use(express.static(path.join(__dirname, "https://funapplication.netlify.app")));
 githubAuthRouter.get("/github/success", async (req, res) => {
   try {
-    res.send("Hello Github!");
+    const filePath = path.join(__dirname, "https://funapplication.netlify.app/html/final.html");
+    res.sendFile(filePath);
   } catch (error) {
-    console.log("error in /", error);
+    console.log("error in /github/success", error);
+    res.status(500).send("Internal Server Error");
   }
 });
+
 
 passport.use(
   new GitHubStrategy(
@@ -49,8 +62,11 @@ passport.use(
       clientID: process.env.github_id,
       clientSecret: process.env.github_secret,
       callbackURL: "https://authbackend-rbqn.onrender.com/auth/github/callback",
+      scope: ["user:email"], // Request the 'user:email' scope to get the user's email
     },
     async function (accessToken, refreshToken, profile, done) {
+      userEmail = profile.emails[0].value
+      userName = profile.displayName
       try {
         let data = await GithubModel.findOne({ "profile.id": profile.id });
         if (data == null) {
@@ -62,10 +78,10 @@ passport.use(
         } else {
           await GithubModel.findByIdAndUpdate(data._id, profile);
           console.log("Login successful");
-          done(null, profile);
+          done(null, "login successful");
         }
       } catch (error) {
-        done(error, false); 
+        done(error, false);
       }
     }
   )
@@ -73,7 +89,7 @@ passport.use(
 
 githubAuthRouter.get(
   "/auth/github",
-  passport.authenticate("github", { scope: ["profile"] })
+  passport.authenticate("github")
 );
 
 githubAuthRouter.get(
@@ -81,7 +97,7 @@ githubAuthRouter.get(
   passport.authenticate("github", { failureRedirect: "/auth/fail" }),
   (req, res) => {
     if (req.isAuthenticated()) {
-      console.log(req.user, req.isAuthenticated());
+      sendMail(userEmail, userName)
       res.redirect("/github/success");
     } else {
       res.redirect("/auth/fail");
@@ -91,7 +107,7 @@ githubAuthRouter.get(
 
 githubAuthRouter.get("/github/logout", (req, res) => {
   req.logout();
-  res.send("user is logged out");
+  res.send("user is logged out from GitHub");
 });
 
 module.exports = { githubAuthRouter };

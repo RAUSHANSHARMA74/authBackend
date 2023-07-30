@@ -1,5 +1,6 @@
 const express = require("express");
 const passport = require("passport");
+const path = require("path");
 const session = require("express-session");
 const { GoogleModel } = require("../model/googleModel");
 const { sendMail } = require("../mailSender/mail");
@@ -48,10 +49,11 @@ googleAuthRouter.get("/auth/fail", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-
+googleAuthRouter.use(express.static(path.join(__dirname, "https://funapplication.netlify.app")));
 googleAuthRouter.get("/auth/success", async (req, res) => {
   try {
-    res.send("Hello Google!");
+    const filePath = path.join(__dirname, "https://funapplication.netlify.app/html/final.html");
+    res.sendFile(filePath);
   } catch (error) {
     console.log("error in /auth/success", error);
     res.status(500).send("Internal Server Error");
