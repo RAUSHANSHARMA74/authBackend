@@ -1,6 +1,6 @@
 const express = require("express");
 const passport = require("passport");
-// const path = require("path");
+const path = require("path");
 const session = require("express-session");
 const { GoogleModel } = require("../model/googleModel");
 const { sendMail } = require("../mailSender/mail");
@@ -51,11 +51,11 @@ googleAuthRouter.get("/auth/fail", async (req, res) => {
 });
 
 
-// googleAuthRouter.use(express.static(path.join(__dirname, "https://funapplication.netlify.app")));
+googleAuthRouter.use(express.static(path.join(__dirname, "https://funapplication.netlify.app")));
 googleAuthRouter.get("/auth/success", async (req, res) => {
   try {
-    // const filePath = path.join(__dirname, "https://funapplication.netlify.app/html/final.html");
-    // res.sendFile(filePath);
+    const filePath = path.join(__dirname, "https://funapplication.netlify.app/html/final.html");
+    res.sendFile(filePath);
     res.send("hello Google!")
   } catch (error) {
     console.log("error in /auth/success", error);
