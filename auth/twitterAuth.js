@@ -73,7 +73,7 @@ passport.use(new TwitterStrategy({
 
 twitterAuthRouter.get(
   "/auth/twitter",
-  passport.authenticate("twitter", { scope: ["profile"] })
+  passport.authenticate("twitter")
 );
 
 twitterAuthRouter.get(
