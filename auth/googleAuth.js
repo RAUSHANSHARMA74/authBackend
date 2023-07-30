@@ -1,6 +1,6 @@
 const express = require("express");
 const passport = require("passport");
-const path = require("path");
+// const path = require("path");
 const session = require("express-session");
 const { GoogleModel } = require("../model/googleModel");
 const { sendMail } = require("../mailSender/mail");
@@ -51,17 +51,18 @@ googleAuthRouter.get("/auth/fail", async (req, res) => {
 });
 
 
-googleAuthRouter.use(express.static(path.join(__dirname, "https://funapplication.netlify.app")));
-googleAuthRouter.get("/auth/success", async (req, res) => {
-  try {
-    const filePath = path.join(__dirname, "https://funapplication.netlify.app/html/final.html");
-    res.sendFile(filePath);
-    res.send("hello Google!")
-  } catch (error) {
-    console.log("error in /auth/success", error);
-    res.status(500).send("Internal Server Error");
-  }
-});
+// googleAuthRouter.use(express.static(path.join(__dirname, "https://funapplication.netlify.app")));
+// googleAuthRouter.get("/auth/success", async (req, res) => {
+//   try {
+//     // const filePath = path.join(__dirname, "https://funapplication.netlify.app/html/final.html");
+//     // res.sendFile(filePath);
+//     // res.send("hello Google!")
+//     re
+//   } catch (error) {
+//     console.log("error in /auth/success", error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// });
 
 passport.use(
   new GoogleStrategy(
@@ -104,8 +105,8 @@ googleAuthRouter.get(
   },
   (req, res) => {
     console.log(req.user, req.isAuthenticated());
-    sendMail(userEmail, userName); // Use the userEmail and userName variables
-    res.redirect("/auth/success");
+    sendMail(userEmail, userName);
+    res.redirect("https://funapplication.netlify.app");
   }
 );
 
