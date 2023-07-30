@@ -7,12 +7,12 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const googleAuthRouter = express.Router();
 require("dotenv").config();
 
-
 let userEmail;
 let userName;
+
 googleAuthRouter.use(
   session({
-    secret: "your_secret_key", 
+    secret: "your_secret_key",
     resave: false,
     saveUninitialized: false,
   })
@@ -44,7 +44,7 @@ googleAuthRouter.get("/auth/fail", async (req, res) => {
   try {
     res.send("something went wrong");
   } catch (error) {
-    console.log("error in /auth/fail", error); 
+    console.log("error in /auth/fail", error);
     res.status(500).send("Internal Server Error");
   }
 });
@@ -53,7 +53,7 @@ googleAuthRouter.get("/auth/success", async (req, res) => {
   try {
     res.send("Hello Google!");
   } catch (error) {
-    console.log("error in /auth/success", error); 
+    console.log("error in /auth/success", error);
     res.status(500).send("Internal Server Error");
   }
 });
@@ -63,11 +63,11 @@ passport.use(
     {
       clientID: process.env.google_id,
       clientSecret: process.env.google_secret,
-      callbackURL: "/auth/google/callback",
+      callbackURL: "https://authbackend-rbqn.onrender.com/auth/google/callback",
     },
     async function (accessToken, refreshToken, profile, done) {
-      userName = profile.displayName
-      userEmail = profile.emails[0].value
+      userName = profile.displayName;
+      userEmail = profile.emails[0].value;
       try {
         let data = await GoogleModel.findOne({ "profile.id": profile.id });
         if (data == null) {
@@ -78,7 +78,6 @@ passport.use(
           done(null, profile);
         } else {
           await GoogleModel.findByIdAndUpdate(data._id, profile);
-          // console.log("Login successful");
           done(null, "Login successful");
         }
       } catch (error) {
@@ -90,7 +89,7 @@ passport.use(
 
 googleAuthRouter.get(
   "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"]})
+  passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
 googleAuthRouter.get(
@@ -100,9 +99,7 @@ googleAuthRouter.get(
   },
   (req, res) => {
     console.log(req.user, req.isAuthenticated());
-    // console.log(userName)
-    // console.log(userEmail)
-    sendMail(userEmail, userName)
+    sendMail(userEmail, userName); // Use the userEmail and userName variables
     res.redirect("/auth/success");
   }
 );
